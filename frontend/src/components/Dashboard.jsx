@@ -17,7 +17,7 @@ const Dashboard = () => {
 
   const createRoom = async () => {
     try {
-      const response = await fetch('http://localhost:4005/api/create-room', {
+      const response = await fetch('http://localhost:2567/api/create-room', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: user.username })
@@ -25,7 +25,7 @@ const Dashboard = () => {
       
       if (response.ok) {
         const data = await response.json();
-        navigate(`/app/room/${data.roomId}`);
+        navigate(`/game/${data.roomId}`);
       }
     } catch (error) {
       console.error('Create room error:', error);
@@ -36,14 +36,14 @@ const Dashboard = () => {
     if (!roomId) return;
 
     try {
-      const response = await fetch('http://localhost:4005/api/join-room', {
+      const response = await fetch('http://localhost:2567/api/join-room', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ roomId, username: user.username })
       });
       
       if (response.ok) {
-        navigate(`/app/room/${roomId}`);
+        navigate(`/game/${roomId}`);
       }
     } catch (error) {
       console.error('Join room error:', error);
@@ -67,7 +67,7 @@ const Dashboard = () => {
       <div className="room-cards">
         <div className="card">
           <h3>Create Room</h3>
-          <p>Start a new chat room</p>
+          <p>Start a new game room</p>
           <button onClick={createRoom} className="create-btn">Create Room</button>
         </div>
         

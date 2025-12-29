@@ -1,41 +1,33 @@
-import { Server } from 'colyseus';
 import { createServer } from 'http';
 import express from 'express';
 import cors from 'cors';
-import { GameRoom } from './rooms/GameRoom.js';
+import mongoose from 'mongoose';
+import apiRoutes from './routes/api.js';
+import { createGameServer } from './gameServer.js';
 import 'dotenv/config';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Login endpoint
-app.post('/api/login', (req, res) => {
-  const { username } = req.body;
-  if (!username) return res.status(400).json({ error: 'Username required' });
-  
-  res.json({ success: true, username, token: `token_${Date.now()}` });
-});
+// MongoDB connection
+const MONGO_URL="mongodb://172.23.198.248:27017/gamedb"
+mongoose.connect(MONGO_URL)
+.then(()=>{
+    console.log("connected to db")
+})
+.catch((err)=>{
+    console.log(err)
+})
 
-// Get available rooms
-app.get('/api/rooms', (req, res) => {
-  const rooms = gameServer.gracefullyShutdown ? [] : 
-    Array.from(gameServer.rooms.values()).map(room => ({
-      roomId: room.roomId,
-      clients: room.clients.length,
-      maxClients: room.maxClients
-    }));
-  res.json(rooms);
-});
+app.use('/api', apiRoutes);
 
-const gameServer = new Server({
-  server: createServer(app)
-});
+const httpServer = createServer(app);
 
-// Register the GameRoom
-gameServer.define('game_room', GameRoom);
+const gameServer = createGameServer(httpServer);
 
 const PORT = process.env.PORT || 2567;
-
 gameServer.listen(PORT);
-console.log(`🎮 Colyseus Game Server running on port ${PORT}`);
+console.log(`🚀 Server running on port ${PORT}`);
+console.log(`📡 API endpoints: http://localhost:${PORT}/api`);
+console.log(`🎮 Game server: ws://localhost:${PORT}`);

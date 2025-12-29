@@ -8,11 +8,11 @@ import Login from './components/Login.jsx';
 
 const router = createBrowserRouter([
   {
-    path: "app",
+    path: "",
     element: <Login />,
   },
   {
-    path: `app/*`,
+    path: `/*`,
     element: <App />,
   },
 ]);

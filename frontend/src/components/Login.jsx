@@ -10,7 +10,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:4005/api/login', {
+      const response = await fetch('http://localhost:2567/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -19,7 +19,7 @@ const Login = () => {
       if (response.ok) {
         const data = await response.json();
         sessionStorage.setItem('user', JSON.stringify(data.user));
-        navigate('dashboard');
+        navigate('/dashboard');
       }
     } catch (error) {
       console.error('Login error:', error);
